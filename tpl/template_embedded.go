@@ -23,28 +23,17 @@ func (t *GoHTMLTemplate) EmbedShortcodes() {
 	t.AddInternalShortcode("relref.html", `{{ .Get 0 | relref .Page }}`)
 	t.AddInternalShortcode("highlight.html", `{{ if len .Params | eq 2 }}{{ highlight .Inner (.Get 0) (.Get 1) }}{{ else }}{{ highlight .Inner (.Get 0) "" }}{{ end }}`)
 	t.AddInternalShortcode("test.html", `This is a simple Test`)
-	t.AddInternalShortcode("figure.html", `<!-- image -->
+	t.AddInternalShortcode("figure.html", `
 <figure {{ with .Get "class" }}class="{{.}}"{{ end }}>
-    {{ with .Get "link"}}<a href="{{.}}">{{ end }}
-        <img src="{{ .Get "src" }}" {{ if or (.Get "alt") (.Get "caption") }}alt="{{ with .Get "alt"}}{{.}}{{else}}{{ .Get "caption" }}{{ end }}" {{ end }}{{ with .Get "width" }}width="{{.}}" {{ end }}/>
-    {{ if .Get "link"}}</a>{{ end }}
-    {{ if or (or (.Get "title") (.Get "caption")) (.Get "attr")}}
-    <figcaption>{{ if isset .Params "title" }}
-        <h4>{{ .Get "title" }}</h4>{{ end }}
-        {{ if or (.Get "caption") (.Get "attr")}}<p>
-        {{ .Get "caption" }}
-        {{ with .Get "attrlink"}}<a href="{{.}}"> {{ end }}
-            {{ .Get "attr" }}
-        {{ if .Get "attrlink"}}</a> {{ end }}
-        </p> {{ end }}
-    </figcaption>
-    {{ end }}
-</figure>
-<!-- image -->`)
+  {{ with .Get "link"}}<a href="{{.}}">{{ end }}
+  <img src="{{ .Get "src" }}" {{ with .Get "alt"}}alt="{{.}}" {{ end }}{{ with .Get "width" }}width="{{.}}" {{ end }}/>
+  {{ if .Get "link"}}</a>{{ end }}
+  <figcaption>{{ .Inner }}</figcaption>
+</figure>`)
 	t.AddInternalShortcode("speakerdeck.html", "<script async class='speakerdeck-embed' data-id='{{ index .Params 0 }}' data-ratio='1.33333333333333' src='//speakerdeck.com/assets/embed.js'></script>")
 	t.AddInternalShortcode("youtube.html", `{{ if .IsNamedParams }}
 <div {{ if .Get "class" }}class="{{ .Get "class" }}"{{ else }}style="position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;"{{ end }}>
-  <iframe src="//www.youtube.com/embed/{{ .Get "id" }}?{{ with .Get "autoplay" }}{{ if eq . "true" }}autoplay=1{{ end }}{{ end }}" 
+  <iframe src="//www.youtube.com/embed/{{ .Get "id" }}?{{ with .Get "autoplay" }}{{ if eq . "true" }}autoplay=1{{ end }}{{ end }}"
   {{ if not (.Get "class") }}style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" {{ end }}allowfullscreen frameborder="0"></iframe>
 </div>{{ else }}
 <div {{ if len .Params | eq 2 }}class="{{ .Get 1 }}"{{ else }}style="position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;"{{ end }}>
