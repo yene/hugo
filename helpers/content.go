@@ -21,6 +21,7 @@ import (
 	"bytes"
 	"html/template"
 	"os/exec"
+	"regexp"
 	"unicode/utf8"
 
 	"github.com/miekg/mmark"
@@ -161,7 +162,11 @@ func stripEmptyNav(in []byte) []byte {
 
 // BytesToHTML converts bytes to type template.HTML.
 func BytesToHTML(b []byte) template.HTML {
-	return template.HTML(string(b))
+	s := string(b)
+	// Remove HTML comments from all output.
+	r := regexp.MustCompile("<!--[^>]*-->")
+	s = r.ReplaceAllString(s, "")
+	return template.HTML(s)
 }
 
 // getHTMLRenderer creates a new Blackfriday HTML Renderer with the given configuration.
